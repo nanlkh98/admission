@@ -258,11 +258,11 @@ const DB = {
   kyonggi:{
     name:'경기대학교',
     교과:[
-      {nm:'교과성적우수자전형',           cnt:'255명',  mt:'학생부(교과) 90%\n+ 출결 10%',       crit:true,  cd:'상위 2개 영역 합 7등급 이내\n한국사 6등급 이내',   note:'영어 1·2등급 → 모두 1등급으로 반영'},
-      {nm:'학교장추천전형',               cnt:'317명',  mt:'학생부(교과) 90%\n+ 출결 10%',       crit:false, cd:'',                                              note:'2028년 졸업예정자만 / 추천 인원 제한 없음 / 졸업생 지원 불가'},
-      {nm:'농어촌학생전형 (정원외)',       cnt:'63명',   mt:'학생부(교과) 90%\n+ 출결 10%',       crit:false, cd:'',                                              note:'농어촌 6년(본인+부모) 또는 12년(본인) 이수자'},
-      {nm:'기초생활수급자등선발전형 (정원외)',cnt:'43명',mt:'학생부(교과) 90%\n+ 출결 10%',       crit:false, cd:'',                                              note:'기초수급자, 차상위계층, 한부모가족 지원대상자'},
-      {nm:'특성화고졸업자전형 (정원외)',   cnt:'29명',   mt:'학생부(교과) 90%\n+ 출결 10%',       crit:false, cd:'',                                              note:'전문교과 24단위 이상 이수한 특성화고 졸업(예정)자'},
+      {nm:'교과성적우수자전형',           cnt:'255명',  mt:'학생부(교과) 90%\n+ 출결 10%',       crit:true,  cd:'상위 2개 영역 합 7등급 이내\n한국사 6등급 이내',   산출:'반영교과: 인문·예체능·관광 → 국어·수학·영어·사회 / 이공·SW → 국어·수학·영어·사회·과학\n석차등급 반영 / 3학년 1학기까지\n등급환산: 1등급=100, 2등급=98, 3등급=90, 4등급=60, 5등급=0',  note:'영어 1·2등급 → 모두 1등급으로 반영'},
+      {nm:'학교장추천전형',               cnt:'317명',  mt:'학생부(교과) 90%\n+ 출결 10%',       crit:false, cd:'',  산출:'반영교과: 전 교과 (체육·예술·교양 제외)\n졸업예정자: 석차등급+성취도 / 3학년 1학기까지\n진로선택: 석차등급·성취도 중 상위 성적 반영',  note:'2028년 졸업예정자만 / 추천 인원 제한 없음 / 졸업생 지원 불가'},
+      {nm:'농어촌학생전형 (정원외)',       cnt:'63명',   mt:'학생부(교과) 90%\n+ 출결 10%',       crit:false, cd:'',  산출:'반영교과: 인문·예체능·관광 → 국어·수학·영어·사회 / 이공·SW → 국어·수학·영어·사회·과학\n석차등급 반영 / 3학년 1학기까지',  note:'농어촌 6년(본인+부모) 또는 12년(본인) 이수자'},
+      {nm:'기초생활수급자등선발전형 (정원외)',cnt:'43명',mt:'학생부(교과) 90%\n+ 출결 10%',       crit:false, cd:'',  산출:'반영교과: 인문·예체능·관광 → 국어·수학·영어·사회 / 이공·SW → 국어·수학·영어·사회·과학\n석차등급 반영 / 3학년 1학기까지',  note:'기초수급자, 차상위계층, 한부모가족 지원대상자'},
+      {nm:'특성화고졸업자전형 (정원외)',   cnt:'29명',   mt:'학생부(교과) 90%\n+ 출결 10%',       crit:false, cd:'',  산출:'반영교과: 전 교과\n성취도 반영 (석차등급 미사용)\n3학년 1학기까지',  note:'전문교과 24단위 이상 이수한 특성화고 졸업(예정)자'},
     ],
     종합:[
       {nm:'KGU학생부종합전형',            cnt:'680명',  mt:'1단계: 서류 100% (3배수)\n2단계: 1단계 70% + 면접 30%',  crit:false, cd:'', note:'디자인비즈학부: 아이디어 스케치 작성 후 면접 진행'},
@@ -288,7 +288,7 @@ const DB = {
   kyunghee:{
     name:'경희대학교',
     교과:[
-      {nm:'지역균형전형', cnt:'미정', mt:'학생부교과·비교과 70%\n+ 교과종합평가 30%', crit:true, cd:'일반학과: 상위 2개 영역 합 5등급 이내, 한국사 5등급 이내\n의학·약학: 상위 3개 영역 합 4등급 이내\n예술·체육: 1개 영역 이상 3등급 이내\n(탐구: 통합사회·통합과학 중 상위 1과목)', note:'졸업예정자만 지원 / 교과별 계열 다르게 반영 / 자연계열 권장과목 이수 여부 정성평가 반영'},
+      {nm:'지역균형전형', cnt:'미정', mt:'학생부교과·비교과 70%\n+ 교과종합평가 30%', crit:true, cd:'일반학과: 상위 2개 영역 합 5등급 이내, 한국사 5등급 이내\n의학·약학: 상위 3개 영역 합 4등급 이내\n예술·체육: 1개 영역 이상 3등급 이내\n(탐구: 통합사회·통합과학 중 상위 1과목)', 산출:'반영교과: 인문 → 국어·수학·영어·사회 / 자연 → 국어·수학·영어·과학·한국사(1,2) / 예술·체육 → 국어·영어\n탐구 진로선택과목: 상대평가 등급·절대평가 성취도 중 상위 성적 반영\n자연계열 교과 이수 권장과목 이수 여부 정성평가 반영', note:'졸업예정자만 지원 / 교과별 계열 다르게 반영 / 자연계열 권장과목 이수 여부 정성평가 반영'},
     ],
     종합:[
       {nm:'네오르네상스전형(면접형)',       cnt:'기존 모집인원의 70% 내외', mt:'1단계: 서류 100% (일반 4배수, 의·약 5배수)\n2단계: 1단계 70% + 면접 30%', crit:false, cd:'', note:'학생부 상대평가 석차등급 + 절대평가 성취도 반영 / 면접 확대(기회 확대)'},
@@ -310,7 +310,7 @@ const DB = {
   duksung:{
     name:'덕성여자대학교',
     교과:[
-      {nm:'고교추천전형', cnt:'160명', mt:'학생부(교과) 90%\n+ 출결 10%', crit:true, cd:'글로벌융합대·과기대: 2개 영역 합 7등급 이내\n약학대학: 수학 포함 3개 영역 합 5등급 이내', note:'2026년 2월 이후 졸업 / 5학기 이상 성적 / 학교장 추천 필수 / 특성화·예고·체고·마이스터고 지원 불가'},
+      {nm:'고교추천전형', cnt:'160명', mt:'학생부(교과) 90%\n+ 출결 10%', crit:true, cd:'글로벌융합대·과기대: 2개 영역 합 7등급 이내\n약학대학: 수학 포함 3개 영역 합 5등급 이내', 산출:'반영교과: 국어·수학·영어·사회·과학 교과\n석차등급+성취도 모두 반영 / 3학년 1학기까지\n진로선택과목 이수학점 가산점 부여 (모집단위별 관련 교과 3%)\n등급환산: 1등급=99.5, 2등급=97.5, 3등급=95, 4등급=85, 5등급 이하=0', note:'2026년 2월 이후 졸업 / 5학기 이상 성적 / 학교장 추천 필수 / 특성화·예고·체고·마이스터고 지원 불가'},
     ],
     종합:[
       {nm:'덕성인재전형Ⅰ (서류형)',                   cnt:'107명', mt:'서류평가 100%',                                               crit:false, cd:'', note:'학교생활기록부 종합 정성평가'},
@@ -356,7 +356,7 @@ const DB = {
   inha:{
     name:'인하대학교',
     교과:[
-      {nm:'학생부교과전형 지역균형', cnt:'미정', mt:'학생부(교과) 90%\n+ 비교과(출결·봉사) 10%', crit:true, cd:'국어·수학·영어·탐구(상위1개) 중\n2개 영역 합 6등급 이내', note:'2026년 이후 졸업(예정)자 지원 가능'},
+      {nm:'학생부교과전형 지역균형', cnt:'미정', mt:'학생부(교과) 90%\n+ 비교과(출결·봉사) 10%', crit:true, cd:'국어·수학·영어·탐구(상위1개) 중\n2개 영역 합 6등급 이내', 산출:'반영교과: 미정 (시행계획 발표 후 확정)\n2026년 이후 졸업(예정)자 지원 가능', note:'2026년 이후 졸업(예정)자 지원 가능'},
     ],
     종합:[
       {nm:'인하미래인재(면접형)',              cnt:'2027 대비 195명 감소', mt:'1단계: 서류종합평가 100% (3.5배수)\n2단계: 1단계 70% + 면접 30%', crit:true,  cd:'미적용\n(의예과만: 국·수·영·탐 3개 합 4등급 이내)', note:'공통+일반선택: 성취도·석차등급 반영 / 진로·융합선택: 성취도만 반영(석차등급 미반영)'},
@@ -378,7 +378,7 @@ const DB = {
   cau:{
     name:'중앙대학교',
     교과:[
-      {nm:'학생부교과전형', cnt:'미정', mt:'미정 (시행계획 발표 후 확정)', crit:null, cd:'', note:'세부 사항 추후 공지 예정'},
+      {nm:'학생부교과전형', cnt:'미정', mt:'미정 (시행계획 발표 후 확정)', crit:null, cd:'', 산출:'미정 (시행계획 발표 후 확정)', note:'세부 사항 추후 공지 예정'},
     ],
     종합:[
       {nm:'학생부종합전형', cnt:'미정', mt:'미정 (시행계획 발표 후 확정)', crit:false, cd:'', note:'세부 사항 추후 공지 예정'},
@@ -417,21 +417,61 @@ function pick(id){
   dlBtn.download = file;
   document.getElementById('pdfActs').style.display = 'flex';
 
-  /* PDF viewer - object + embed + fallback */
-  document.getElementById('pdfBody').innerHTML = `
-    <object data="${file}" type="application/pdf" style="flex:1;width:100%;border:none;display:block;min-height:500px;">
-      <embed src="${file}" type="application/pdf" style="flex:1;width:100%;min-height:500px;">
-        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;height:400px;padding:30px;text-align:center;">
-          <div style="font-size:40px;opacity:.2;">📄</div>
-          <div style="font-size:14px;font-weight:600;color:#374151;">PDF 미리보기를 지원하지 않는 브라우저입니다</div>
-          <div style="font-size:12px;color:#64748b;line-height:1.7;">Chrome 또는 Edge 사용을 권장합니다.<br>아래 버튼으로 직접 파일을 열 수 있습니다.</div>
-          <a href="${file}" target="_blank" style="padding:10px 20px;background:#2563eb;color:#fff;border-radius:8px;font-size:13px;text-decoration:none;font-family:inherit;">📂 PDF 새 탭에서 열기</a>
-        </div>
-      </embed>
-    </object>`;
+  /* PDF.js 뷰어 */
+  document.getElementById('pdfBody').innerHTML =
+    `<div id="pdfViewer" style="flex:1;overflow-y:auto;background:#525659;display:flex;flex-direction:column;align-items:center;padding:12px;gap:8px;">
+       <div style="color:#ccc;font-size:13px;padding:30px;">PDF 불러오는 중...</div>
+     </div>`;
+  renderPdfJs(file);
 
   /* 분석 패널 */
   renderAnalysis(id);
+}
+
+/* PDF.js 로 PDF 렌더링 */
+let pdfJsLoaded = false;
+
+function loadPdfJsLib(callback){
+  if(pdfJsLoaded){ callback(); return; }
+  const s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+  s.onload = () => {
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    pdfJsLoaded = true;
+    callback();
+  };
+  document.head.appendChild(s);
+}
+
+async function renderPdfJs(file){
+  loadPdfJsLib(async () => {
+    try {
+      const container = document.getElementById('pdfViewer');
+      if(!container) return;
+      container.innerHTML = '';
+      const pdf = await pdfjsLib.getDocument(file).promise;
+      const totalPages = pdf.numPages;
+      for(let p = 1; p <= totalPages; p++){
+        const page = await pdf.getPage(p);
+        const viewport = page.getViewport({scale: 1.4});
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        canvas.style.cssText = 'width:100%;max-width:700px;background:#fff;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.3);';
+        container.appendChild(canvas);
+        await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;
+      }
+    } catch(e) {
+      const container = document.getElementById('pdfViewer');
+      if(container) container.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:40px;text-align:center;">
+          <div style="font-size:36px;opacity:.3;">📄</div>
+          <div style="color:#fff;font-size:13px;">PDF를 불러올 수 없습니다</div>
+          <a href="${file}" target="_blank" style="padding:9px 18px;background:#2563eb;color:#fff;border-radius:7px;font-size:13px;text-decoration:none;">새 탭에서 열기</a>
+        </div>`;
+    }
+  });
 }
 
 function reset(){
@@ -456,7 +496,7 @@ function renderAnalysis(id){
   /* ── 학생부교과전형 ── */
   if(d.교과.length){
     h += secHead('📚 학생부교과전형', 'badge-blue', d.교과.length);
-    h += buildTable(d.교과);
+    h += buildTable교과(d.교과);
   } else {
     h += secHead('📚 학생부교과전형', 'badge-blue', 0);
     h += `<div class="mini-card" style="color:#94a3b8;font-size:12px;text-align:center;padding:14px;">해당 전형 없음</div>`;
@@ -514,7 +554,38 @@ function secHead(label, cls, cnt){
   </div>`;
 }
 
-/* ── 헬퍼: 교과·종합 테이블 ── */
+/* ── 헬퍼: 교과 테이블 (산출방식 포함) ── */
+function buildTable교과(rows){
+  if(!rows.length) return '';
+  let h = `<div class="tbl-wrap"><table class="mtbl">
+    <thead><tr>
+      <th>전형명</th>
+      <th>모집인원</th>
+      <th>전형방법</th>
+      <th>수능최저</th>
+      <th>교과 산출방식</th>
+      <th>비고</th>
+    </tr></thead><tbody>`;
+  rows.forEach(r => {
+    let critHtml;
+    if(r.crit === null) critHtml = `<span class="crit-tbd">미정</span>`;
+    else if(r.crit)     critHtml = `<span class="crit-yes">적용</span>${r.cd ? `<div class="crit-detail">${r.cd.replace(/\n/g,'<br>')}</div>` : ''}`;
+    else                critHtml = `<span class="crit-no">없음</span>`;
+    const 산출Html = r.산출 ? r.산출.replace(/\n/g,'<br>') : '—';
+    h += `<tr>
+      <td class="nm">${r.nm}</td>
+      <td class="cnt">${r.cnt}</td>
+      <td class="mt">${r.mt.replace(/\n/g,'<br>')}</td>
+      <td class="crit">${critHtml}</td>
+      <td class="note" style="min-width:160px;color:#1e3a5f;">${산출Html}</td>
+      <td class="note">${r.note || '—'}</td>
+    </tr>`;
+  });
+  h += `</tbody></table></div>`;
+  return h;
+}
+
+/* ── 헬퍼: 종합 테이블 (기존 유지) ── */
 function buildTable(rows){
   if(!rows.length) return '';
   let h = `<div class="tbl-wrap"><table class="mtbl">
