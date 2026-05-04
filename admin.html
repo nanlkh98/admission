@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2028 대입전형 일괄분석 관리자</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR',sans-serif;background:#f0f2f6;color:#1a1a2e;min-height:100vh;}
+.header{background:linear-gradient(135deg,#1e3a5f,#2563eb);padding:18px 28px;color:#fff;}
+.header h1{font-size:18px;font-weight:700;margin-bottom:4px;}
+.header p{font-size:13px;color:#bfdbfe;}
+.container{max-width:860px;margin:24px auto;padding:0 20px;}
+.card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:22px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.card h2{font-size:14px;font-weight:700;color:#1e3a5f;margin-bottom:14px;}
+label{font-size:13px;color:#374151;font-weight:500;display:block;margin-bottom:5px;}
+input[type=text],input[type=password]{width:100%;padding:10px 13px;border:1.5px solid #d1d5db;border-radius:8px;font-size:13px;font-family:inherit;outline:none;transition:border-color .15s;}
+input:focus{border-color:#2563eb;}
+.ig{margin-bottom:14px;}
+.hint{font-size:11px;color:#94a3b8;margin-top:4px;}
+.btn{padding:10px 20px;border-radius:8px;border:none;font-size:13px;font-family:inherit;font-weight:600;cursor:pointer;transition:all .15s;}
+.btn-primary{background:#2563eb;color:#fff;}
+.btn-primary:hover{background:#1d4ed8;}
+.btn-primary:disabled{background:#93c5fd;cursor:not-allowed;}
+.btn-success{background:#16a34a;color:#fff;}
+.btn-success:hover{background:#15803d;}
+.btn-stop{background:#dc2626;color:#fff;}
+.progress-wrap{margin-top:16px;}
+.pl{font-size:12px;color:#374151;margin-bottom:6px;display:flex;justify-content:space-between;}
+.pb-bg{background:#e2e8f0;border-radius:999px;height:10px;overflow:hidden;}
+.pb{background:linear-gradient(90deg,#2563eb,#3b82f6);height:100%;border-radius:999px;transition:width .3s;}
+.ugrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:7px;margin-top:14px;}
+.ui{display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:7px;border:1px solid #e2e8f0;font-size:12px;background:#fafbfc;cursor:pointer;}
+.ui:hover{background:#f1f5f9;}
+.st{width:18px;height:18px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:1.5px solid #cbd5e1;}
+.sk{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd;}
+.sr{background:#fef3c7;border-color:#fcd34d;animation:pulse .8s infinite;}
+.so{background:#dcfce7;color:#16a34a;border-color:#86efac;}
+.se{background:#fee2e2;color:#dc2626;border-color:#fca5a5;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.logbox{background:#1e293b;border-radius:8px;padding:14px;font-size:11.5px;color:#94a3b8;font-family:monospace;height:160px;overflow-y:auto;margin-top:12px;line-height:1.8;}
+.lok{color:#4ade80;} .lerr{color:#f87171;} .linf{color:#60a5fa;}
+.rbox{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:18px;margin-top:14px;text-align:center;}
+.rbox h3{font-size:15px;font-weight:700;color:#15803d;margin-bottom:8px;}
+.rbox p{font-size:13px;color:#166534;line-height:1.7;margin-bottom:12px;}
+.warn{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:12px 15px;font-size:12px;color:#92400e;line-height:1.7;margin-top:10px;}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>2028 대입전형계획 일괄분석 관리자</h1>
+  <p>Anthropic API로 82개 대학을 자동 분석하고 완성된 index.html을 생성합니다.</p>
+</div>
+<div class="container">
+
+  <div class="card">
+    <h2>분석 설정</h2>
+    <div class="ig">
+      <label>GitHub Pages 기본 URL</label>
+      <input type="text" id="baseUrl" value="https://nanlkh98.github.io/admission" />
+      <div class="hint">PDF 파일이 있는 GitHub Pages 주소 (마지막 / 없이)</div>
+    </div>
+    <div class="ig">
+      <label>Anthropic API 키</label>
+      <input type="password" id="apiKey" placeholder="sk-ant-..." />
+      <div class="hint">분석 후 페이지를 닫으면 키는 사라집니다. 저장되지 않습니다.</div>
+    </div>
+    <div class="warn">
+      예상 비용: 전체 82개 기준 약 $2~6 수준<br>
+      예상 시간: 약 20~40분. 페이지를 닫지 마세요!
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>분석 실행</h2>
+    <div class="row">
+      <button class="btn btn-primary" id="startBtn" onclick="startAll()">전체 분석 시작 (82개)</button>
+      <button class="btn btn-stop" id="stopBtn" onclick="doStop()" style="display:none;">중단</button>
+      <span id="stText" style="font-size:12px;color:#6b7280;"></span>
+    </div>
+    <div class="progress-wrap" id="pwrap" style="display:none;">
+      <div class="pl"><span id="ptxt">0 / 77 완료</span><span id="ppct">0%</span></div>
+      <div class="pb-bg"><div class="pb" id="pbar" style="width:0%"></div></div>
+    </div>
+    <div class="logbox" id="logbox" style="display:none;"></div>
+  </div>
+
+  <div class="card">
+    <h2>대학 목록 &nbsp;<span style="font-size:12px;font-weight:400;color:#94a3b8;">클릭하면 해당 대학만 재분석</span></h2>
+    <div class="ugrid" id="ugrid"></div>
+  </div>
+
+  <div class="card" id="resCard" style="display:none;">
+    <h2>분석 완료</h2>
+    <div class="rbox">
+      <h3>index.html 생성 준비 완료!</h3>
+      <p>완성된 index.html을 다운로드하세요.<br>GitHub에 올리면 다른 선생님들이 API 키 없이 바로 사용할 수 있습니다.</p>
+      <button class="btn btn-success" onclick="downloadResult()">완성된 index.html 다운로드</button>
+    </div>
+  </div>
+
+</div>
+<script>
+var UNIVS = [{"id":"gachon","name":"가천대학교"},{"id":"catholic","name":"가톨릭대학교"},{"id":"kangnam","name":"강남대학교"},{"id":"kangwon_gangneung","name":"강원대학교(강릉)"},{"id":"kangwon_samcheok","name":"강원대학교(삼척)"},{"id":"kangwon_wonju","name":"강원대학교(원주)"},{"id":"kangwon_chunchen","name":"강원대학교(춘천)"},{"id":"konkuk","name":"건국대학교"},{"id":"konkuk_glokul","name":"건국대학교(글로컬)"},{"id":"konyang","name":"건양대학교"},{"id":"kyonggi","name":"경기대학교"},{"id":"kdu","name":"경동대학교"},{"id":"kyungpook","name":"경북대학교"},{"id":"kyunghee","name":"경희대학교"},{"id":"korea","name":"고려대학교"},{"id":"gjue","name":"공주교육대학교"},{"id":"kongju","name":"공주대학교"},{"id":"kwangwoon","name":"광운대학교"},{"id":"kookmin","name":"국민대학교"},{"id":"kornu","name":"나사렛대학교"},{"id":"namseoul","name":"남서울대학교"},{"id":"danguk","name":"단국대학교"},{"id":"daejeon","name":"대전대학교"},{"id":"duksung","name":"덕성여자대학교"},{"id":"dongguk","name":"동국대학교"},{"id":"dondduck","name":"동덕여자대학교"},{"id":"myongji","name":"명지대학교"},{"id":"mokwon","name":"목원대학교"},{"id":"baekseok","name":"백석대학교"},{"id":"busan","name":"부산대학교"},{"id":"sangmyong","name":"상명대학교(서울)"},{"id":"sangmyong_chunan","name":"상명대학교(천안)"},{"id":"seogang","name":"서강대학교"},{"id":"seomoon","name":"선문대학교"},{"id":"snue","name":"서울교육대학교"},{"id":"seoultech","name":"서울과학기술대학교"},{"id":"snu","name":"서울대학교"},{"id":"uos","name":"서울시립대학교"},{"id":"swu","name":"서울여자대학교"},{"id":"seowon","name":"서원대학교"},{"id":"sungkyul","name":"성결대학교"},{"id":"skku","name":"성균관대학교"},{"id":"sungshin","name":"성신여자대학교"},{"id":"sejong","name":"세종대학교"},{"id":"suwon","name":"수원대학교"},{"id":"sookmyung","name":"숙명여자대학교"},{"id":"soongsil","name":"숭실대학교"},{"id":"sch","name":"순천향대학교"},{"id":"aju","name":"아주대학교"},{"id":"anyang","name":"안양대학교"},{"id":"yonsei","name":"연세대학교"},{"id":"yonsei_mirae","name":"연세대학교(미래)"},{"id":"yongyin","name":"용인대학교"},{"id":"woosong","name":"우송대학교"},{"id":"yuwon","name":"유원대학교"},{"id":"ewha","name":"이화여자대학교"},{"id":"incheon","name":"인천대학교"},{"id":"inha","name":"인하대학교"},{"id":"jeonbuk","name":"전북대학교"},{"id":"joongbu","name":"중부대학교"},{"id":"cau","name":"중앙대학교"},{"id":"cje","name":"청주교육대학교"},{"id":"cju","name":"청주대학교"},{"id":"cnu","name":"충남대학교"},{"id":"chungbuk","name":"충북대학교"},{"id":"cnue","name":"춘천교육대학교"},{"id":"ptu","name":"평택대학교"},{"id":"hknu","name":"한경국립대학교"},{"id":"tukorea","name":"한국공학대학교"},{"id":"knue","name":"한국교원대학교"},{"id":"koreatech","name":"한국기술교육대학교"},{"id":"hufs","name":"한국외국어대학교"},{"id":"kau","name":"한국항공대학교"},{"id":"hannam","name":"한남대학교"},{"id":"hanbat","name":"한밭대학교"},{"id":"hansei","name":"한세대학교"},{"id":"hansung","name":"한성대학교"},{"id":"hanshin","name":"한신대학교"},{"id":"hanyang","name":"한양대학교"},{"id":"hanyang_erica","name":"한양대학교(ERICA)"},{"id":"hoseo","name":"호서대학교"},{"id":"hongik","name":"홍익대학교"}];
+var MANUAL = ['kyonggi','kyunghee','duksung','snu','inha'];
+var DB = {};
+var stopFlag = false;
+var running = false;
+
+window.onload = function(){
+  var grid = document.getElementById('ugrid');
+  UNIVS.forEach(function(u){
+    var d = document.createElement('div');
+    d.className = 'ui';
+    d.id = 'item_' + u.id;
+    var isM = MANUAL.indexOf(u.id) >= 0;
+    d.innerHTML = '<div class="st ' + (isM ? 'sk' : '') + '" id="st_' + u.id + '">' + (isM ? 'M' : '') + '</div>' +
+      '<span>' + u.name + '</span>';
+    if(!isM) d.onclick = (function(id, name){ return function(){ reOne(id, name); }; })(u.id, u.name);
+    grid.appendChild(d);
+  });
+};
+
+function setSt(id, cls, icon){
+  var el = document.getElementById('st_' + id);
+  if(el){ el.className = 'st ' + cls; el.textContent = icon || ''; }
+}
+
+function addLog(msg, type){
+  var box = document.getElementById('logbox');
+  var d = document.createElement('div');
+  if(type) d.className = 'l' + type;
+  d.textContent = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+}
+
+function ab2b64(buf){
+  var b = new Uint8Array(buf), s = '';
+  for(var i = 0; i < b.length; i++) s += String.fromCharCode(b[i]);
+  return btoa(s);
+}
+
+function makePrompt(name){
+  var lines = [
+    name + ' 2028학년도 대입전형계획 문서입니다.',
+    '아래 JSON 형식으로 전형 정보를 추출하세요. JSON만 반환하고 다른 텍스트는 포함하지 마세요.',
+    '',
+    '{"gyogwa":[{"nm":"전형명","cnt":"모집인원","mt":"전형방법","crit":true,"cd":"수능최저","sanchul":"반영교과","note":"비고"}],',
+    '"jonghap":[{"nm":"전형명","cnt":"모집인원","mt":"전형방법","crit":false,"cd":"","note":"비고"}],',
+    '"nonsul":[{"nm":"전형명","cnt":"모집인원","mt":"전형방법","crit":true,"cd":"수능최저","note":"비고"}],',
+    '"silgi":[{"nm":"전형명","cnt":"모집인원","mt":"전형방법","crit":false,"cd":"","note":"비고"}],',
+    '"jeongsi":[{"nm":"전형명","cnt":"모집인원","mt":"전형방법","note":"비고"}],',
+    '"iljeong":{"susiwonser":"날짜","susibalpyo":"날짜","jeongsiwonser":"날짜","jeongsiballpyo":"날짜","teukisahang":"주요변경사항"}}',
+    '',
+    '규칙: crit는 수능최저 있으면 true, 없으면 false, 미정이면 null.',
+    '해당 전형 없으면 빈배열 []. 모집인원 미정이면 미정. 일정 없으면 null. 정원외 전형도 포함.',
+    '전형방법에서 줄바꿈이 필요하면 \n 사용.'
+  ];
+  return lines.join('\n');
+}
+
+async function analyzeOne(id, name, baseUrl, apiKey){
+  setSt(id, 'sr', '...');
+  var file = baseUrl + '/' + id + '.pdf';
+  try{
+    var pr = await fetch(file);
+    if(!pr.ok) throw new Error('PDF ' + pr.status);
+    var b64 = ab2b64(await pr.arrayBuffer());
+
+    var ar = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-opus-4-5',
+        max_tokens: 4000,
+        messages: [{
+          role: 'user',
+          content: [
+            {type:'document', source:{type:'base64', media_type:'application/pdf', data:b64}},
+            {type:'text', text: makePrompt(name)}
+          ]
+        }]
+      })
+    });
+
+    var aj = await ar.json();
+    if(aj.error) throw new Error(aj.error.message);
+
+    var txt = aj.content.filter(function(c){return c.type==='text';}).map(function(c){return c.text;}).join('');
+    var m = txt.match(/{[sS]*}/);
+    if(!m) throw new Error('JSON 파싱 실패');
+
+    var data = JSON.parse(m[0]);
+    // 키 이름을 index.html이 기대하는 한글 키로 변환
+    data.name = name;
+    if(data.gyogwa !== undefined){ data['교과'] = data.gyogwa; delete data.gyogwa; }
+    if(data.jonghap !== undefined){ data['종합'] = data.jonghap; delete data.jonghap; }
+    if(data.nonsul !== undefined){ data['논술'] = data.nonsul; delete data.nonsul; }
+    if(data.silgi !== undefined){ data['실기'] = data.silgi; delete data.silgi; }
+    if(data.jeongsi !== undefined){ data['정시'] = data.jeongsi; delete data.jeongsi; }
+    if(data.iljeong !== undefined){ data['일정'] = data.iljeong; delete data.iljeong; }
+
+    DB[id] = data;
+    setSt(id, 'so', 'v');
+    addLog(name + ' 완료', 'ok');
+    return true;
+  } catch(e){
+    setSt(id, 'se', 'x');
+    addLog(name + ': ' + e.message, 'err');
+    return false;
+  }
+}
+
+async function startAll(){
+  var baseUrl = document.getElementById('baseUrl').value.trim();
+  while(baseUrl.length > 0 && baseUrl[baseUrl.length-1] === '/') baseUrl = baseUrl.slice(0,-1);
+  var apiKey = document.getElementById('apiKey').value.trim();
+  if(!baseUrl || !apiKey){ alert('URL과 API 키를 모두 입력해주세요.'); return; }
+
+  stopFlag = false; running = true;
+  document.getElementById('startBtn').disabled = true;
+  document.getElementById('stopBtn').style.display = 'inline-block';
+  document.getElementById('pwrap').style.display = 'block';
+  document.getElementById('logbox').style.display = 'block';
+  document.getElementById('logbox').innerHTML = '';
+
+  var targets = UNIVS.filter(function(u){ return MANUAL.indexOf(u.id) < 0; });
+  var total = targets.length, done = 0, failed = 0;
+  addLog('분석 시작 (' + total + '개)', 'inf');
+
+  for(var i = 0; i < targets.length; i++){
+    if(stopFlag) break;
+    var u = targets[i];
+    document.getElementById('stText').textContent = (i+1) + '/' + total + ' - ' + u.name;
+    var ok = await analyzeOne(u.id, u.name, baseUrl, apiKey);
+    if(ok) done++; else failed++;
+
+    var pct = Math.round((i+1)/total*100);
+    document.getElementById('pbar').style.width = pct + '%';
+    document.getElementById('ptxt').textContent = (i+1) + ' / ' + total + ' 완료 (실패 ' + failed + ')';
+    document.getElementById('ppct').textContent = pct + '%';
+
+    if(i < targets.length-1 && !stopFlag) await new Promise(function(r){setTimeout(r,800);});
+  }
+
+  running = false;
+  document.getElementById('startBtn').disabled = false;
+  document.getElementById('stopBtn').style.display = 'none';
+  document.getElementById('stText').textContent = '완료! 성공 ' + done + ' / 실패 ' + failed;
+  addLog('전체 완료. 성공:' + done + ' 실패:' + failed, 'inf');
+  if(done > 0) document.getElementById('resCard').style.display = 'block';
+}
+
+function doStop(){ stopFlag = true; addLog('중단 요청됨', 'err'); }
+
+async function reOne(id, name){
+  if(running){ alert('분석 진행 중에는 불가합니다.'); return; }
+  var baseUrl = document.getElementById('baseUrl').value.trim();
+  while(baseUrl.length > 0 && baseUrl[baseUrl.length-1] === '/') baseUrl = baseUrl.slice(0,-1);
+  var apiKey = document.getElementById('apiKey').value.trim();
+  if(!baseUrl || !apiKey){ alert('URL과 API 키를 먼저 입력해주세요.'); return; }
+  if(!confirm(name + ' 재분석하시겠습니까?')) return;
+  document.getElementById('logbox').style.display = 'block';
+  await analyzeOne(id, name, baseUrl, apiKey);
+  document.getElementById('resCard').style.display = 'block';
+}
+
+async function downloadResult(){
+  var baseUrl = document.getElementById('baseUrl').value.trim();
+  while(baseUrl.length > 0 && baseUrl[baseUrl.length-1] === '/') baseUrl = baseUrl.slice(0,-1);
+  var btn = event.target;
+  btn.disabled = true;
+  btn.textContent = 'index.html 가져오는 중...';
+
+  try{
+    // GitHub에서 현재 index.html 가져오기
+    var res = await fetch(baseUrl + '/index.html?nc=' + Date.now());
+    if(!res.ok) throw new Error('index.html 로드 실패: ' + res.status);
+    var html = await res.text();
+
+    // DB 섹션 위치 찾기
+    var dbStart = html.indexOf('const DB = {');
+    var dbEnd = html.indexOf('};/* DB end */');
+    if(dbStart < 0 || dbEnd < 0) throw new Error('index.html에서 DB 위치를 찾을 수 없습니다.');
+
+    // AI 분석 결과를 DB 코드로 직렬화
+    var dbCode = 'const DB = {
+
+';
+    Object.keys(DB).forEach(function(id){
+      var d = DB[id];
+      if(!d) return;
+      dbCode += '  /* ' + d.name + ' */
+';
+      dbCode += '  ' + id + ':' + JSON.stringify(d) + ',
+
+';
+    });
+
+    // 새 html 조합 (앞부분 + 새 DB + 뒷부분)
+    var newHtml = html.slice(0, dbStart) + dbCode + html.slice(dbEnd);
+
+    var blob = new Blob([newHtml], {type: 'text/html;charset=utf-8'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'index.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    btn.textContent = '다운로드 완료!';
+  } catch(e){
+    alert('오류: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '완성된 index.html 다운로드';
+  }
+}
+</script>
+</body>
+</html>
